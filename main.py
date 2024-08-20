@@ -28,7 +28,7 @@ if __name__ == '__main__':
 logger = create_logger()
 
 if __name__ == '__main__':
-    if len(sys.argv) >= 1 and sys.argv[0] == "--debug":
+    if len(sys.argv) >= 2 and sys.argv[1] == "--debug":
         set_debug(True)
 
     app = QApplication(sys.argv)
