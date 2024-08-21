@@ -23,7 +23,7 @@ class MainWindowWidget(QWidget):
         self.setLayout(layout_root)
 
         self._w_image_view = ImageViewWidget(self)
-        self._w_image_view.set_data(get_current_project().im_bgr)
+        self._w_image_view.set_data(get_current_project().camera_image.bgr)
         self._w_image_view.set_scaling(0.6)
         layout_root.addWidget(self._w_image_view, 1)
 
@@ -110,7 +110,7 @@ class MainWindowWidget(QWidget):
             is_snapped = False
         self._w_image_view.set_pointer(
             pos=pos,
-            color=(0, 255, 0) if is_snapped else (0, 0, 255),
+            color=(0, 255, 0) if is_snapped else (0, 0, 191),
         )
 
     @pyqtSlot()
@@ -128,6 +128,7 @@ class MainWindow(QMainWindow):
     def _init_ui(self):
         self.setWindowTitle("光切断法キャリブレーションツール")
         self.resize(1500, 700)
+        self.showMaximized()
 
         self._w_main_widget = MainWindowWidget(self)
         self.setCentralWidget(self._w_main_widget)

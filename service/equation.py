@@ -1,4 +1,5 @@
 import numpy as np
+import sympy
 from sympy import symbols, Eq, solve
 
 from domain.project import Project
@@ -9,8 +10,9 @@ class EquationSolveService:
     def __init__(self, project: Project):
         self._project = project
 
+    # noinspection PyPep8Naming
     @staticmethod
-    def _solve_equations_matrix(points: np.ndarray):
+    def _solve_equations_matrix(points: np.ndarray) -> dict[sympy.Symbol, float]:
         # 未知数
         a = np.array(symbols('a11 a12 a13 a14 a21 a22 a23 a24 a31 a32 a33'))
 
@@ -40,16 +42,16 @@ class EquationSolveService:
         solution_matrix = np.dot(A_pseudo_inv, B)
 
         # 解を辞書形式に変換
-        solution = {a_ij: solution_matrix[i, 0] for i, a_ij in enumerate(a)}
+        solution = {a_ij: float(solution_matrix[i, 0]) for i, a_ij in enumerate(a)}
 
+        # noinspection PyTypeChecker
         return solution
 
     def solve_camera_parameters(self) -> CameraParameterSolution | None:
         points = self._project.image_points.points_array
-        print(points)
         try:
             solution = self._solve_equations_matrix(points)
-        except Exception:
+        except np.linalg.LinAlgError:
             return None
         else:
             return CameraParameterSolution(

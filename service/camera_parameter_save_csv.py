@@ -9,8 +9,8 @@ class CameraParameterSaveCSVService:
     def __init__(self):
         pass
 
+    @staticmethod
     def save_as_csv(
-            self,
             *,
             solution: CameraParameterSolution,
             csv_fullpath: Path,

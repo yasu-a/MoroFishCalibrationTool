@@ -5,8 +5,8 @@ from PyQt5.QtWidgets import QApplication, QFileDialog
 
 from application.current_project import set_current_project
 from application.debug import set_debug, is_debug
+from application.dependency import get_project_service
 from control.window_main import MainWindow
-from domain.project import Project
 from util.app_logging import create_logger
 from util.fonts import font
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
             sys.exit()
 
     # プロジェクト生成
-    project = Project.create_new_from_image_filepath(filepath)
+    project = get_project_service().create_from_image_fullpath(filepath)
     set_current_project(project)
 
     window = MainWindow()

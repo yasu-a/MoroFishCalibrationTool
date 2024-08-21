@@ -50,14 +50,6 @@ class ImageViewWidget(QGraphicsView):
                 and self._camera_parameter_solution.is_valid():
             p_origin, p_norm_x, p_norm_y, p_norm_z \
                 = self._camera_parameter_solution.calculate_2d_units()
-            cv2.circle(
-                im_bgr,
-                (int(p_origin[0] * self._scaling), int(p_origin[1] * self._scaling)),
-                3,
-                (0, 0, 0),
-                -1,
-                cv2.LINE_AA,
-            )
             for p_norm, color in zip(
                     [p_norm_x, p_norm_y, p_norm_z],
                     [(0, 0, 255), (0, 255, 0), (255, 0, 0)],
@@ -67,23 +59,31 @@ class ImageViewWidget(QGraphicsView):
                     (int(p_origin[0] * self._scaling), int(p_origin[1] * self._scaling)),
                     (int(p_norm[0] * self._scaling), int(p_norm[1] * self._scaling)),
                     color,
-                    1,
+                    2,
                     cv2.LINE_AA,
                 )
+            cv2.circle(
+                im_bgr,
+                (int(p_origin[0] * self._scaling), int(p_origin[1] * self._scaling)),
+                3,
+                (0, 0, 0),
+                -1,
+                cv2.LINE_AA,
+            )
 
         # 十字のポインターと座標の描画
         cv2.line(
             im_bgr,
-            (int(self._pointer_pos[0]) - 10, int(self._pointer_pos[1])),
-            (int(self._pointer_pos[0]) + 10, int(self._pointer_pos[1])),
+            (int(self._pointer_pos[0]) - 20, int(self._pointer_pos[1])),
+            (int(self._pointer_pos[0]) + 20, int(self._pointer_pos[1])),
             self._pointer_color,
             1,
             cv2.LINE_AA,
         )
         cv2.line(
             im_bgr,
-            (int(self._pointer_pos[0]), int(self._pointer_pos[1]) - 10),
-            (int(self._pointer_pos[0]), int(self._pointer_pos[1]) + 10),
+            (int(self._pointer_pos[0]), int(self._pointer_pos[1]) - 20),
+            (int(self._pointer_pos[0]), int(self._pointer_pos[1]) + 20),
             self._pointer_color,
             1,
             cv2.LINE_AA,
@@ -92,9 +92,9 @@ class ImageViewWidget(QGraphicsView):
             im_bgr,
             f"({int(self._pointer_pos[0] / self._scaling)},"
             f" {int(self._pointer_pos[1] / self._scaling)})",
-            (int(self._pointer_pos[0]) + 10, int(self._pointer_pos[1]) + 15),
+            (int(self._pointer_pos[0]) + 10, int(self._pointer_pos[1]) + 25),
             cv2.FONT_HERSHEY_SIMPLEX,
-            0.5,
+            0.6,
             self._pointer_color,
             1,
             cv2.LINE_AA,

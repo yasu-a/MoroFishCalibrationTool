@@ -39,7 +39,7 @@ class CameraParameterViewWidget(QWidget):
 
         layout_button.addStretch(1)
 
-        self._b_export = QPushButton("csvで保存", self)
+        self._b_export = QPushButton("csvとしてエクスポート", self)
         # noinspection PyUnresolvedReferences
         self._b_export.clicked.connect(self._b_export_clicked)
         layout_button.addWidget(self._b_export)
@@ -70,23 +70,30 @@ class CameraParameterViewWidget(QWidget):
 
         csv_fullpath, _ = QFileDialog.getSaveFileName(
             self,
-            "カメラパラメータをcsvで保存",
+            "エクスポート",
             QStandardPaths.writableLocation(QStandardPaths.DesktopLocation),
             "カメラパラメータ (*.csv)",
         )
 
         csv_fullpath = Path(csv_fullpath)
+        if csv_fullpath.exists() and csv_fullpath.is_dir():
+            return
 
         try:
             get_camera_parameter_save_csv_service().save_as_csv(
                 solution=self._solution,
                 csv_fullpath=csv_fullpath,
             )
-        except:
+        except OSError:
             self._logger.exception(f"Failed to save csv to \"{csv_fullpath}\"")
+            QMessageBox.critical(
+                self,
+                "エクスポート",
+                f"csvへの保存に失敗しました。\n保存先：{csv_fullpath}",
+            )
         else:
             QMessageBox.information(
                 self,
-                "カメラパラメータのcsvへの保存",
+                "エクスポート",
                 f"カメラパラメータがcsvに正常に保存されました。\n保存先：{csv_fullpath}",
             )
