@@ -1,16 +1,15 @@
 import cv2
 import numpy as np
 from PyQt5.QtCore import QObject, Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap, QImage, QMouseEvent
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
+from PyQt5.QtGui import QPixmap, QImage, QMouseEvent, QWheelEvent
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QAbstractSlider
 
-from control.mixin_shift_horizontal_scroll import HorizontalScrollWithShiftAndWheelMixin
 from dto.equation_solution import CameraParameterSolution
 from dto.image_view_annotation import Annotation
 from dto.image_view_mouse_event import ImageViewMousePressEvent, ImageViewMouseMoveEvent
 
 
-class ImageViewWidget(QGraphicsView, HorizontalScrollWithShiftAndWheelMixin):
+class ImageViewWidget(QGraphicsView):
     image_clicked = pyqtSignal(ImageViewMousePressEvent, name="image_clicked")
     image_mouse_moved = pyqtSignal(ImageViewMouseMoveEvent, name="image_mouse_moved")
 
@@ -29,7 +28,9 @@ class ImageViewWidget(QGraphicsView, HorizontalScrollWithShiftAndWheelMixin):
 
     def _init_ui(self):
         self.setMouseTracking(True)
+        # noinspection PyTypeChecker
         self.setVerticalScrollBar(None)
+        # noinspection PyTypeChecker
         self.setHorizontalScrollBar(None)
         self.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
@@ -176,3 +177,23 @@ class ImageViewWidget(QGraphicsView, HorizontalScrollWithShiftAndWheelMixin):
         )
         # noinspection PyUnresolvedReferences
         self.image_mouse_moved.emit(param)
+
+    def wheelEvent(self, event: QWheelEvent):
+        if event.modifiers() == Qt.ControlModifier:
+            wheel_event: QWheelEvent = event
+            if wheel_event.angleDelta().y() > 0:
+                self.set_scaling(self._scaling * 1.05)
+            else:
+                self.set_scaling(self._scaling / 1.05)
+        else:
+            if event.modifiers() == Qt.ShiftModifier:
+                scrollbar = self.horizontalScrollBar()
+            else:
+                scrollbar = self.verticalScrollBar()
+
+            action = QAbstractSlider.SliderSingleStepAdd
+            if event.angleDelta().y() > 0:
+                action = QAbstractSlider.SliderSingleStepSub
+
+            for _ in range(2):
+                scrollbar.triggerAction(action)

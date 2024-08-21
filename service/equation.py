@@ -46,9 +46,10 @@ class EquationSolveService:
 
     def solve_camera_parameters(self) -> CameraParameterSolution | None:
         points = self._project.image_points.points_array
+        print(points)
         try:
             solution = self._solve_equations_matrix(points)
-        except Exception as e:
+        except Exception:
             return None
         else:
             return CameraParameterSolution(

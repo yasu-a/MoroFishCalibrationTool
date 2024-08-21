@@ -8,9 +8,12 @@ import sympy.core
 class CameraParameterSolution:  # TODO: freeze and implement cache
     solution: dict[sympy.core.Symbol, float]
 
+    def values(self) -> list[float]:
+        return list(self.solution.values())
+
     def as_matrix(self) -> np.ndarray:
         matrix = np.empty(shape=(3, 4), dtype=np.float64)
-        values = list(self.solution.values())
+        values = self.values()
         indexes = [
             (1, 1),
             (1, 2),
@@ -31,9 +34,10 @@ class CameraParameterSolution:  # TODO: freeze and implement cache
 
     def transform_3d_to_2d(self, points: tuple[float, float, float]) -> tuple[float, float]:
         x, y, _ = self.as_matrix() @ np.array((*points, 1))
-        return float(x), float(y)
+        s = np.dot(self.as_matrix()[2, :], np.array((*points, 1)))
+        return float(x / s), float(y / s)
 
-    def calculate_2d_units(self, unit_mm=10) -> tuple[
+    def calculate_2d_units(self, unit_mm=20) -> tuple[
                                                     tuple[float, float],  # origin
                                                     tuple[float, float],  # norm_x
                                                     tuple[float, float],  # norm_y

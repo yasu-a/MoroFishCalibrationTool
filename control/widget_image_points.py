@@ -23,22 +23,22 @@ class ImagePointListItemWidget(QWidget):
         self.setLayout(layout)
 
         self._l_selected = QLabel(self)
-        self._l_selected.setFixedWidth(20)
+        self._l_selected.setFixedWidth(30)
         self._l_selected.setFont(font(small=True, monospace=True))
         layout.addWidget(self._l_selected)
 
         self._l_name = QLabel(self)
-        self._l_name.setFixedWidth(50)
+        self._l_name.setFixedWidth(60)
         self._l_name.setFont(font(small=True, monospace=True))
         layout.addWidget(self._l_name)
 
         self._l_point_world = QLabel(self)
-        self._l_point_world.setFixedWidth(110)
+        self._l_point_world.setFixedWidth(120)
         self._l_point_world.setFont(font(small=True, monospace=True))
         layout.addWidget(self._l_point_world)
 
         self._l_point_camera = QLabel(self)
-        self._l_point_camera.setFixedWidth(150)
+        self._l_point_camera.setFixedWidth(160)
         self._l_point_camera.setFont(font(small=True, monospace=True))
         layout.addWidget(self._l_point_camera)
 

@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     # 画像ファイルを開いてもらう
     if is_debug():
-        filepath = Path(r"~\Downloads\measurement_calib_01_000.jpg").expanduser()
+        filepath = Path(r"~\Downloads\measurement_calib02_000.jpg").expanduser()
     else:
         filepath, _ = QFileDialog.getOpenFileName(
             None,
